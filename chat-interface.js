@@ -71,12 +71,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedMessages = [];
     let deleteMode = ''; // 'messages' 或 'conversation'
     
-    // 默认头像
+    // 默认头像 - 使用本地资源而非CDN链接
     const defaultAvatars = [
-        'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
-        'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375_960_720.png',
-        'https://cdn.pixabay.com/photo/2016/04/01/12/11/avatar-1300582_960_720.png',
-        'https://cdn.pixabay.com/photo/2016/03/31/19/58/avatar-1295429_960_720.png'
+        'default-avatar.svg'
     ];
     
     // 初始化
@@ -341,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 处理新头像上传
     function handleNewAvatarUpload(event) {
         const file = event.target.files[0];
-        if (file) {
+        if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 newAvatarPreview.src = e.target.result;
@@ -353,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 处理头像上传（对话详情）
     function handleAvatarUpload(event) {
         const file = event.target.files[0];
-        if (file) {
+        if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 detailsAvatar.src = e.target.result;
@@ -527,21 +524,45 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 保存对话到本地存储
     function saveConversations() {
-        localStorage.setItem('chatConversations', JSON.stringify(conversations));
+        try {
+            // 获取基于当前URL路径的存储键名
+            const storageKey = getStorageKey('chatConversations');
+            localStorage.setItem(storageKey, JSON.stringify(conversations));
+        } catch (error) {
+            console.error('保存对话失败:', error);
+            // 可以在这里添加错误处理逻辑，如显示错误通知
+        }
     }
     
     // 从本地存储加载对话
     function loadConversations() {
-        const savedConversations = localStorage.getItem('chatConversations');
-        if (savedConversations) {
-            conversations = JSON.parse(savedConversations);
-            renderConversationsList();
+        try {
+            // 获取基于当前URL路径的存储键名，以避免不同GitHub Pages项目之间的冲突
+            const storageKey = getStorageKey('chatConversations');
+            const savedConversations = localStorage.getItem(storageKey);
             
-            // 如果有对话，加载第一个
-            if (conversations.length > 0) {
-                switchConversation(conversations[0].id);
+            if (savedConversations) {
+                conversations = JSON.parse(savedConversations);
+                renderConversationsList();
+                
+                // 如果有对话，加载第一个
+                if (conversations.length > 0) {
+                    switchConversation(conversations[0].id);
+                }
             }
+        } catch (error) {
+            console.error('加载对话失败:', error);
+            // 如果加载失败，初始化为空数组
+            conversations = [];
         }
+    }
+    
+    // 获取基于当前URL路径的存储键名
+    function getStorageKey(baseKey) {
+        // 获取当前页面URL的路径名，用作命名空间
+        // 这样可以避免不同GitHub Pages项目之间的本地存储冲突
+        const pathName = window.location.pathname.replace(/\//g, '_');
+        return `${pathName}_${baseKey}`;
     }
     
     // 生成唯一ID
