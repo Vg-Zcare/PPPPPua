@@ -11,8 +11,8 @@ const Message = (function() {
     
     // 定义测试模式标志，如果后端连接有问题，可以设置为true进行测试
     const TEST_MODE = false;
-    // 使用相对路径，这样前端和后端可以在同一服务器上运行
-    const API_URL = '/api';
+    // 修改为实际的后端API地址
+    const API_URL = 'http://192.168.1.201:5000/chat';
     
     /**
      * 初始化消息处理模块
