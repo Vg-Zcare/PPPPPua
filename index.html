@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>聊天界面</title>
+    <link rel="stylesheet" href="chat.css">
+    <style>
+        .redirect-container {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+        .redirect-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .redirect-button:hover {
+            background-color: #2980b9;
+        }
+        /* 广告区域样式 */
+        .ad-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .ad-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .ad-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            background-color: #fff;
+            border-radius: 5px;
+            border: 1px dashed #ddd;
+            padding: 10px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        /* 倒计时样式 */
+        .countdown {
+            font-size: 1.2em;
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .ad-container {
+                max-width: 100%;
+                margin: 15px auto;
+                padding: 10px;
+            }
+            
+            .ad-content {
+                min-height: 150px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .redirect-button {
+                width: 80%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .ad-content {
+                min-height: 120px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+    <!-- 自动重定向到login.html -->
+    <script>
+        window.onload = function() {
+            // 设置3秒倒计时
+            let countDown = 3;
+            const countdownElement = document.getElementById('countdown');
+            
+            // 更新倒计时显示
+            const updateCountdown = function() {
+                countdownElement.textContent = countDown;
+                countDown--;
+                
+                if (countDown < 0) {
+                    // 3秒后自动重定向到登录页面
+                    window.location.href = 'login.html';
+                } else {
+                    setTimeout(updateCountdown, 1000);
+                }
+            };
+            
+            // 开始倒计时
+            updateCountdown();
+        }
+    </script>
+</head>
+<body>
+    <div class="redirect-container">
+        <h1>聊天界面</h1>
+        <p>正在加载聊天界面，倒计时: <span id="countdown">3</span> 秒...</p>
+        <p>如果没有自动跳转，请点击下面的按钮：</p>
+        <a href="login.html" class="redirect-button">立即进入聊天界面</a>
+    </div>
+    
+    <!-- 广告展示区域 -->
+    <div class="ad-container">
+        <div class="ad-title">推广信息</div>
+        <div class="ad-content">
+            <!-- 在此处放置您的广告内容 -->
+            <p>这里是广告展示区域，您可以放置图片、文字或嵌入式广告代码。</p>
+        </div>
+    </div>
+</body>
+</html> 
